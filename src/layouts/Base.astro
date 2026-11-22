@@ -1,5 +1,7 @@
 ---
-import '@fontsource-variable/fraunces/soft.css';
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/space-mono/latin-400.css';
+import '@fontsource/space-mono/latin-700.css';
 import '../styles/global.css';
 
 interface Props {
@@ -18,6 +20,10 @@ const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === 'true';
 const tipUrl = import.meta.env.PUBLIC_TIP_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const year = new Date().getFullYear();
+
+const tickerItems = ['21+ only', 'One kitten', 'One bong', 'Every day', 'New drop 7 a.m. ET'];
+// The track holds the line twice so the scroll loops seamlessly; the copy is hidden from screen readers.
+const tickerRun = Array.from({ length: 4 }, () => tickerItems).flat();
 ---
 
 <!doctype html>
@@ -30,6 +36,7 @@ const year = new Date().getFullYear();
     {!indexable && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#111111" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -46,24 +53,47 @@ const year = new Date().getFullYear();
   </head>
   <body>
     <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-      <div class="gate-card">
-        <p class="gate-emoji" aria-hidden="true">🐈 &amp; 💨</p>
-        <h2 id="gate-title">Are you 21 or older?</h2>
-        <p>This site has pictures of bongs next to pictures of kittens. That's the whole joke.</p>
+      <div class="gate-top">
+        <span class="wordmark-text">Kittens <span class="amp">&amp;</span> Bongs</span>
+      </div>
+      <div class="gate-body">
+        <p class="gate-big" aria-hidden="true">21+</p>
+        <h2 id="gate-title">Old enough to be here?</h2>
+        <p>This site puts a picture of a bong next to a picture of a kitten every day. That's the whole joke. You need to be 21 or older to come in.</p>
         <div class="gate-actions">
-          <button type="button" class="btn" data-age="yes">Yes, I'm 21+</button>
-          <a class="btn btn-quiet" href="https://www.google.com/search?q=cute+kittens">No, kittens only</a>
+          <button type="button" class="btn btn-accent" data-age="yes">I'm 21+ — let me in</button>
+          <a class="btn btn-ghost-light" href="https://www.pexels.com/search/kitten/" rel="noopener">Not yet — just kittens</a>
         </div>
+      </div>
+      <p class="gate-fine">We remember your answer in this browser only. No account needed.</p>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-track">
+        {
+          [0, 1].map((copy) => (
+            <p class="note" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {tickerRun.map((t) => (
+                <span>{t.toUpperCase()} /</span>
+              ))}
+            </p>
+          ))
+        }
       </div>
     </div>
 
     <header class="site-header">
-      <a href="/" class="wordmark">Kittens <span class="amp">&amp;</span> Bongs</a>
-      <nav>
-        <a href="/archive">Archive</a>
-        <a href="/#signup">Get it daily</a>
-        {tipUrl && <a href={tipUrl} rel="noopener" target="_blank">Tip jar</a>}
-      </nav>
+      <div class="site-header-inner">
+        <a href="/" class="wordmark" aria-label="Kittens and Bongs, home">
+          <span class="wordmark-text">Kittens <span class="amp">&amp;</span> Bongs</span>
+          <span class="sticker-21" aria-hidden="true">21+</span>
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a class="pill" href="/archive">Archive</a>
+          {tipUrl && <a class="pill" href={tipUrl} rel="noopener" target="_blank">Tip jar</a>}
+          <a class="pill pill-solid" href="/#signup">Subscribe</a>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -71,13 +101,21 @@ const year = new Date().getFullYear();
     </main>
 
     <footer class="site-footer">
-      <p>
-        One kitten, one bong, every day. Humor only: nothing here is for sale, and nothing here is advice. For adults 21+.
-      </p>
-      <p>
-        Photos provided by <a href="https://www.pexels.com" rel="noopener">Pexels</a> and credited to each photographer.
-        · <a href="/privacy">Privacy</a> · © {year} kittensandbongs.com
-      </p>
+      <div class="site-footer-inner">
+        <div class="footer-brand">
+          <strong>Kittens &amp; Bongs</strong>
+          <span>One kitten. One bong. Every day.</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="https://www.pexels.com" rel="noopener">Photos by Pexels</a>
+          <a href="/archive">Archive</a>
+          <a href="/privacy">Privacy</a>
+        </nav>
+        <p class="footer-fine">
+          For adults 21+. Humor only: nothing here is for sale, and nothing here is advice. Photos are credited to each
+          photographer. © {year} kittensandbongs.com
+        </p>
+      </div>
     </footer>
 
     <script>

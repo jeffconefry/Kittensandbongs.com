@@ -9,11 +9,9 @@ const messages: Record<string, string> = {
 const message = status ? messages[status] : undefined;
 ---
 
-<section id="signup" class="signup">
-  <div>
-    <h2>Get it in your inbox</h2>
-    <p class="note">One email every morning: a kitten and a bong. Unsubscribe with one click.</p>
-  </div>
+<section id="signup" class="panel panel-accent signup">
+  <h2>Get the daily drop</h2>
+  <p class="lede">One kitten and one bong in your inbox every morning at 7 a.m. Eastern. Unsubscribe in one click.</p>
   {message && <p class="alert" role="alert">{message}</p>}
   <form method="post" action="/api/subscribe">
     <label class="hp" aria-hidden="true">
@@ -21,32 +19,24 @@ const message = status ? messages[status] : undefined;
     </label>
     <input type="hidden" name="ts" value={Date.now()} />
     <div class="row">
-      <label for="email" class="hp">Email address</label>
-      <input id="email" type="email" name="email" required maxlength="254" placeholder="you@example.com" autocomplete="email" />
-      <button class="btn" type="submit">Sign me up</button>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" required maxlength="254" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <button class="btn" type="submit">Subscribe</button>
     </div>
     {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} data-size="flexible" data-theme="light" />}
-    <p class="note">By signing up you confirm you’re 21 or older. We only use your email to send the daily pair.</p>
+    <p class="note">We’ll email you to confirm first. By signing up you confirm you’re 21 or older. Your address is only used for the daily email.</p>
   </form>
   {siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
 </section>
 
 <style>
   .signup {
-    margin: 4rem auto 0;
-    max-width: 40rem;
-    background: var(--paper);
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: 0 1px 0 var(--line);
-    display: grid;
-    gap: 1rem;
+    flex: 2 1 420px;
   }
-  .signup h2 {
-    margin-bottom: 0.2rem;
-  }
-  .signup p {
-    margin: 0;
+  .lede {
+    max-width: 46ch;
   }
   form {
     display: grid;
@@ -54,10 +44,11 @@ const message = status ? messages[status] : undefined;
   }
   .row {
     display: flex;
-    gap: 0.6rem;
     flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.5rem;
   }
-  .row input {
-    flex: 1 1 14rem;
+  .row .field {
+    flex: 1 1 15rem;
   }
 </style>

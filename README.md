@@ -33,7 +33,7 @@ The job is safe to repeat: the `days` row stops a second pick, and each subscrib
 | Contact-form protections (origin check, size cap, honeypot, fill-time window, Turnstile) | Applied to the signup form, with the audit fixes: Turnstile required in prod, Origin header required, no message bodies logged | |
 | Node adapter in dev | Dropped | No Keystatic; dev runs in workerd so the D1 binding works locally |
 | Keystatic, R2, NAS → rclone sync, Image Transformations, media-check | Dropped | No editors, and photos come from Pexels' CDN |
-| Self-hosted fonts | Same idea (`@fontsource-variable/fraunces`) | |
+| Self-hosted fonts | Same idea (`@fontsource/anton`, `@fontsource/space-mono`) | |
 | New: D1 database, cron trigger, email sending | | The daily job and the list |
 | CSP styles | Hashes only, **no** `'unsafe-inline'` | So no `style=""` attributes anywhere in pages |
 

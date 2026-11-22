@@ -1,0 +1,32 @@
+---
+import type { ArchiveRow } from '../lib/db';
+import { longDate } from '../lib/day';
+
+interface Props {
+  rows: ArchiveRow[];
+}
+const { rows } = Astro.props;
+
+/** "SAT 11.21.26" for a YYYY-MM-DD string. */
+function shortDate(day: string): string {
+  const [y, m, d] = day.split('-').map(Number);
+  const wd = new Date(Date.UTC(y, m - 1, d, 12)).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+  return `${wd} ${String(m).padStart(2, '0')}.${String(d).padStart(2, '0')}.${String(y).slice(2)}`;
+}
+---
+
+<ul class="thumb-grid">
+  {
+    rows.map((r) => (
+      <li>
+        <a href={`/day/${r.day}`} aria-label={longDate(r.day)}>
+          <span class="thumbs">
+            <img src={r.cat_src} alt={r.cat_alt} loading="lazy" decoding="async" />
+            <img src={r.bong_src} alt={r.bong_alt} loading="lazy" decoding="async" />
+          </span>
+          <span class="thumb-date">{shortDate(r.day)}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

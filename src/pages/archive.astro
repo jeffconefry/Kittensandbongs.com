@@ -1,8 +1,9 @@
 ---
 import { env } from 'cloudflare:workers';
 import Base from '../layouts/Base.astro';
+import ArchiveGrid from '../components/ArchiveGrid.astro';
 import { archive } from '../lib/db';
-import { longDate, nyDay } from '../lib/day';
+import { nyDay } from '../lib/day';
 
 const rows = await archive(env.DB, nyDay(), 120);
 Astro.response.headers.set('Cache-Control', 'public, max-age=300');
@@ -11,73 +12,19 @@ Astro.response.headers.set('Cache-Control', 'public, max-age=300');
 <Base title="Archive · Kittens & Bongs" description="Every kitten and every bong so far.">
   <section class="head">
     <h1>The archive</h1>
-    <p class="note">Every day so far, newest first.</p>
+    <p class="kicker">Every drop so far, newest first.</p>
   </section>
 
-  {rows.length === 0 && <p class="note center">Nothing here yet. Check back tomorrow.</p>}
-
-  <ul class="grid">
-    {
-      rows.map((r) => (
-        <li>
-          <a href={`/day/${r.day}`}>
-            <div class="thumbs">
-              <img src={r.cat_src} alt={r.cat_alt} loading="lazy" decoding="async" />
-              <img src={r.bong_src} alt={r.bong_alt} loading="lazy" decoding="async" />
-            </div>
-            <span>{longDate(r.day)}</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  {rows.length === 0 ? <p>Nothing here yet. Check back tomorrow.</p> : <ArchiveGrid rows={rows} />}
 </Base>
 
 <style>
   .head {
-    text-align: center;
-    margin: 1.5rem 0 2rem;
+    padding: 2.5rem 0 1.5rem;
+    border-bottom: var(--rule);
+    margin-bottom: 0.5rem;
   }
-  .center {
-    text-align: center;
-  }
-  .grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 1.25rem;
-  }
-  .grid a {
-    display: block;
-    background: var(--paper);
-    border-radius: 18px;
-    padding: 0.6rem 0.6rem 0.75rem;
-    color: var(--ink);
-    text-decoration: none;
-    box-shadow: 0 1px 0 var(--line);
-    transition: transform 0.2s ease;
-  }
-  .grid a:hover {
-    transform: translateY(-3px);
-  }
-  .thumbs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-  }
-  .thumbs img {
-    aspect-ratio: 1;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    background: var(--line);
-  }
-  .grid span {
-    display: block;
-    margin: 0.6rem 0.2rem 0;
-    font-size: 0.85rem;
-    color: var(--muted);
+  .head h1 {
+    margin-bottom: 0.2em;
   }
 </style>
